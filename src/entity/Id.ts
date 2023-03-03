@@ -1,0 +1,1 @@
+export type EntityId = `${string}-${string}-${string}-${string}-${string}`;
