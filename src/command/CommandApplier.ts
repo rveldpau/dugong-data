@@ -1,3 +1,4 @@
+import { DataSchema } from "../data/DataSchema";
 import { Entity } from "../entity/Entity";
 
 export type Command<CommandId extends string, PROPERTIES extends Record<string, unknown>> = PROPERTIES & {
@@ -5,7 +6,7 @@ export type Command<CommandId extends string, PROPERTIES extends Record<string, 
 };
 
 export type CommandApplier<
-    ENTITY extends Entity<string, Record<string, unknown>>,
+    DATA_SCHEMA extends DataSchema,
     COMMANDID extends string,
     PROPERTIES extends Record<string, unknown>,
-> = (entity:ENTITY, command: Command<COMMANDID, PROPERTIES>) => ENTITY
+> = (entity:Entity<string, DATA_SCHEMA>, command: Command<COMMANDID, PROPERTIES>) => Entity<string, DATA_SCHEMA>

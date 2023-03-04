@@ -16,7 +16,7 @@ export function addFieldToSchema<
     return {
         ...existing,
         [key]: dataElement
-    }
+    };
 }
 
 export type DataSchemaBuilder<EXISTING_SCHEMA extends DataSchema> = {
@@ -34,7 +34,7 @@ function createDataSchemaBuilder<DATA_SCHEMA extends DataSchema>(dataSchema: DAT
     return {
         addField: (key, element) => createDataSchemaBuilder(addFieldToSchema(key,element,dataSchema)),
         dataSchema
-    }
+    };
 }
 
 export function createDataSchema(): DataSchemaBuilder<DataSchema> {

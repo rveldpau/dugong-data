@@ -1,33 +1,17 @@
-import { Entity } from "../entity/Entity";
-import { EntityId } from "../entity/Id";
+import { ConvertDataSchemaToType, DataSchema } from "../data/DataSchema";
 import { CommandApplier } from "./CommandApplier";
 
-export type CommandPropertyPrimitives = "string" | "number"
-export type CommandPropertyStructure = { [key:string]: CommandProperty}
-export type CommandPropertyIterables = (CommandPropertyPrimitives | CommandPropertyStructure)[]
-export type CommandProperty = CommandPropertyPrimitives | CommandPropertyIterables | CommandPropertyStructure
-
-export type ConvertCommandPropertyToType<prop extends CommandProperty> = 
-    prop extends "string" ? string : 
-        ( prop extends "number" ? number :
-            ( prop extends CommandPropertyIterables ? ConvertCommandPropertyToType<prop[0]>[] : 
-                ( prop extends CommandPropertyStructure ? { [key in keyof prop]: ConvertCommandPropertyToType<prop[key]> }
-                    : never
-                )
-            )
-        )
-
-export type CommandDefinition<CommandId extends string, EntityType extends Entity<string>, Properties extends CommandPropertyStructure> = {
+export type CommandDefinition<CommandId extends string, DATA_SCHEMA extends DataSchema, Properties extends DataSchema> = {
     command: CommandId,
-    entityType: EntityType["type"],
+    dataSchema: DATA_SCHEMA,
     properties: Properties,
-    apply: CommandApplier<EntityType, CommandId, ConvertCommandPropertyToType<Properties>>
+    apply: CommandApplier<DATA_SCHEMA, CommandId, ConvertDataSchemaToType<Properties>>
 }
 
-export function generateCommandDefinition<EntityType extends Entity<string>, CommandId extends string, Properties extends CommandPropertyStructure>(
-    definitionMetadata: Omit<CommandDefinition<CommandId, EntityType, Properties>, "apply">,
-    apply: CommandApplier<EntityType, CommandId, ConvertCommandPropertyToType<Properties>>
-): CommandDefinition<CommandId, EntityType, Properties> {
+export function generateCommandDefinition<CommandId extends string, DATA_SCHEMA extends DataSchema, Properties extends DataSchema>(
+    definitionMetadata: Omit<CommandDefinition<CommandId, DATA_SCHEMA, Properties>, "apply">,
+    apply: CommandApplier<DATA_SCHEMA, CommandId, ConvertDataSchemaToType<Properties>>
+): CommandDefinition<CommandId, DATA_SCHEMA, Properties> {
     return {
         ...definitionMetadata,
         apply
