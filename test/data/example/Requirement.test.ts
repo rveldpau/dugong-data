@@ -30,8 +30,10 @@ describe("Domain Unit: Requirement Example", () => {
                 "element": { name: {en:"Element"}, type:"string"}, 
                 "value": { name: {en:"Value"}, type:"string"}, 
             } }, (entity, command) => {
-                entity["name"] = command.value;
-                return entity;
+                return {
+                    ...entity,
+                    name: command.value
+                };
             })
             .addComand({ command: "doSomething", dataSchema: schema, properties: {} }, (entity) => {
                 return entity;
